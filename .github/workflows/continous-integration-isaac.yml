@@ -2,11 +2,8 @@ name: continous-integration-isaac
 on:
   push:
     branches: [master]
-    jobs:
-        pruebas-de-sast:
-            runs-on: ubuntu-latest
-            steps:
-              - name: Pruebas de SAST
-                run: echo Ejecucion de pruebas SAST
-              
-
+jobs:
+  pruebas-de-sast:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo Ejecucion de pruebas SAST
