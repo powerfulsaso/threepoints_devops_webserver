@@ -1,9 +1,24 @@
-name: continous-integration-isaac
+name: continuous-integration-isaac
+
 on:
   push:
     branches: [master]
+
 jobs:
   pruebas-de-sast:
     runs-on: ubuntu-latest
     steps:
-      - run: echo Ejecucion de pruebas SAST
+      - uses: actions/checkout@v2
+      - name: Ejecucion de pruebas SAST
+        run: echo Ejecucion de pruebas SAST
+  
+  crear-archivo-credentials:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Crear archivo credentials.ini
+        run: |
+          echo "[credentials]" >> credentials.ini
+          echo "user=${{ secrets.USERNAME }}" >> credentials.ini
+          echo "password=${{ secrets.PASSWORD }}" >> credentials.ini
+
