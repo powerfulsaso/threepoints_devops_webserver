@@ -12,14 +12,17 @@ jobs:
       - name: Ejecucion de pruebas SAST
         run: echo Realizando análisis de SAST
       - name: Comprobar requisitos
+        id: comprobar-requisito
         run: |
           if [ -f allow_pull_request.txt ]; then
-            echo "allow_pull=true" >> $GITHUB_ENV
+            echo "allow_pull=${{true}}" >> "$GITHUB_OUTPUT"
           else
-            echo "allow_pull=false" >> $GITHUB_ENV
+            echo "allow_pull=${{false}}" >> "$GITHUB_OUTPUT"
       - name: Build
-        if: ${{ env.allow_pull == 'true'}}
+        env:
+          allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
+        if: $ {{ allow_pull_value == ${{true}} }}
         run: echo Permitiendo pull requests
       - name: Impedir Build
-        if: ${{ env.allow_pull == 'false'}}
+        if: $ {{ allow_pull_value == ${{false}} }}
         run: echo Build fallida && exit 1
