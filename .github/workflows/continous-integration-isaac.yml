@@ -1,12 +1,35 @@
-name: continous-integration-isaac
+name: continuous-integration-isaac
+
 on:
   push:
-    branches: [master]
-    jobs:
-        pruebas-de-sast:
-            runs-on: ubuntu-latest
-            steps:
-              - name: Pruebas de SAST
-                run: echo Ejecucion de pruebas SAST
-              
+    branches:
+      - 'master'
+      - 'feature/*'
+      - 'hotfix/*'
+
+jobs:
+  pruebas-de-sast:
+    runs-on: ubuntu-latest
+    steps:
+      # - uses: actions/checkout@v4
+      - name: Ejecucion de pruebas SAST
+        run: echo Ejecucion de pruebas SAST
+  
+  crear-archivo-credentials:
+    runs-on: ubuntu-latest
+    steps:
+      # - uses: actions/checkout@v4
+      - name: Crear archivo credentials.ini
+        run: |
+          echo "[credentials]" >> credentials.ini
+          echo "username=${{ secrets.USERNAME }}" >> credentials.ini
+          echo "password=${{ secrets.PASSWORD }}" >> credentials.ini
+      - name: Leer archivo credentials.ini
+        run: cat credentials.ini
+  build-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: docker build -t devops_ws . --tag devops_ws:$(date +%s)
 
