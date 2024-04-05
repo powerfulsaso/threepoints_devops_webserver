@@ -15,18 +15,18 @@ jobs:
         id: comprobar-requisito
         run: |
           if [ -f allow_pull_request.txt ]; then
-            echo "allow_pull=${{true}}" >> "$GITHUB_OUTPUT"
+            echo "allow_pull=true" >> "$GITHUB_OUTPUT"
           else
-            echo "allow_pull=${{false}}" >> "$GITHUB_OUTPUT"
+            echo "allow_pull=false" >> "$GITHUB_OUTPUT"
           fi
       - name: Impedir Build
         env:
           allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
-        if: allow_pull_value == ${{false}}
+        if: ${{ env.allow_pull_value == 'false' }}
         run: echo Build fallida && exit 1
       - name: Build
         env:
           allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
-        if: allow_pull_value == ${{true}}
+        if: ${{ env.allow_pull_value == 'true' }}
         run: echo Permitiendo pull requests
       
