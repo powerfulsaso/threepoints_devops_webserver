@@ -1,0 +1,39 @@
+name: continuous-integration-isaac
+
+on:
+  pull_request:
+    types: [opened, reopened]
+  
+jobs:
+  analizar_codigo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ejecucion de pruebas SAST
+        run: echo Realizando análisis de SAST
+      - name: Comprobar requisitos
+        run: |
+          if [ -f allow_pull_request.txt ]; then
+            echo "allow_pull=true" >> $GITHUB_ENV
+          else
+            echo "allow_pull=false" >> $GITHUB_ENV
+
+  crear-archivo-credentials:
+    runs-on: ubuntu-latest
+    steps:
+      # - uses: actions/checkout@v4
+      - name: Crear archivo credentials.ini
+        run: |
+          echo "[credentials]" >> credentials.ini
+          echo "username=${{ secrets.USERNAME }}" >> credentials.ini
+          echo "password=${{ secrets.PASSWORD }}" >> credentials.ini
+      - name: Leer archivo credentials.ini
+        run: cat credentials.ini
+  build-docker-image:
+    runs-on: ubuntu-latest
+    if: ${{ env.allow_pull == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker Image
+        run: docker build -t devops_ws . --tag devops_ws:$(date +%s)
+
