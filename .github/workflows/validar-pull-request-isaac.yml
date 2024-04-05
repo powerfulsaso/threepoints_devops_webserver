@@ -1,0 +1,32 @@
+name: continuous-integration-isaac
+
+on:
+  pull_request:
+    types: [opened, reopened]
+  
+jobs:
+  analizar_codigo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ejecucion de pruebas SAST
+        run: echo Realizando análisis de SAST
+      - name: Comprobar requisitos
+        id: comprobar-requisito
+        run: |
+          if [ -f allow_pull_request.txt ]; then
+            echo "allow_pull=${{true}}" >> "$GITHUB_OUTPUT"
+          else
+            echo "allow_pull=${{false}}" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Impedir Build
+        env:
+          allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
+        if: allow_pull_value == ${{false}}
+        run: echo Build fallida && exit 1
+      - name: Build
+        env:
+          allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
+        if: allow_pull_value == ${{true}}
+        run: echo Permitiendo pull requests
+      
