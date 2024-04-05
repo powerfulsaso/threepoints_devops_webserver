@@ -19,13 +19,14 @@ jobs:
           else
             echo "allow_pull=${{false}}" >> "$GITHUB_OUTPUT"
           fi
-      - name: Build
-        env:
-          allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
-        if: allow_pull_value == ${{true}}
-        run: echo Permitiendo pull requests
       - name: Impedir Build
         env:
           allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
         if: allow_pull_value == ${{false}}
         run: echo Build fallida && exit 1
+      - name: Build
+        env:
+          allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
+        if: allow_pull_value == ${{true}}
+        run: echo Permitiendo pull requests
+      
