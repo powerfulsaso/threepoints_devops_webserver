@@ -22,10 +22,10 @@ jobs:
       - name: Build
         env:
           allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
-        if: $ {{ allow_pull_value == ${{true}} }}
+        if: allow_pull_value == ${{true}}
         run: echo Permitiendo pull requests
       - name: Impedir Build
         env:
           allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
-        if: $ {{ allow_pull_value == ${{false}} }}
+        if: allow_pull_value == ${{false}}
         run: echo Build fallida && exit 1
