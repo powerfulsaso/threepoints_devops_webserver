@@ -18,6 +18,7 @@ jobs:
             echo "allow_pull=${{true}}" >> "$GITHUB_OUTPUT"
           else
             echo "allow_pull=${{false}}" >> "$GITHUB_OUTPUT"
+          fi
       - name: Build
         env:
           allow_pull_value: ${{ steps.comprobar-requisito.outputs.allow_pull }}
