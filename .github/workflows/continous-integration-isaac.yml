@@ -2,7 +2,10 @@ name: continuous-integration-isaac
 
 on:
   push:
-    branches: [master]
+    branches:
+      - 'master'
+      - 'feature/*'
+      - 'hotfix/*'
 
 jobs:
   pruebas-de-sast:
